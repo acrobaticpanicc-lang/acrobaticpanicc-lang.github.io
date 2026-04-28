@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>רשימת מוזמנים</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 150px;
+      background: #f0f4ff;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    thead {
+      background: #4f46e5;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: right;
+    }
+
+    th {
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background: #eef2ff;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .confirmed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .maybe {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .group {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+      }
+
+      td::before {
+        font-weight: bold;
+        color: #555;
+      }
+
+      td:nth-child(1)::before { content: "שם"; }
+      td:nth-child(2)::before { content: "הוזמנו"; }
+      td:nth-child(3)::before { content: "אישרו"; }
+      td:nth-child(4)::before { content: "מתלבטים"; }
+      td:nth-child(5)::before { content: "צד"; }
+      td:nth-child(6)::before { content: "קבוצה"; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📋 רשימת מוזמנים</h1>
+
+  <div class="card stats">
+    <div class="stat">
+      <h2 id="totalInvited">0</h2>
+      <div>סה"כ מוזמנים</div>
+    </div>
+    <div class="stat">
+      <h2 id="totalConfirmed">0</h2>
+      <div>אישרו הגעה</div>
+    </div>
+    <div class="stat">
+      <h2 id="totalMaybe">0</h2>
+      <div>מתלבטים</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>שם</th>
+          <th>הוזמנו</th>
+          <th>אישרו</th>
+          <th>מתלבטים</th>
+          <th>צד</th>
+          <th>קבוצה</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // 🔧 Replace this with your actual data (exported from Excel as JSON)
+  const data = [
+    { name: "לביא חיים", invited: 1, confirmed: 1, maybe: 1, side: "חתן", group: "הורים" },
+    { name: "ז׳אנו", invited: 1, confirmed: 2, maybe: 0, side: "חתן", group: "הורים" },
+    { name: "אלקנה", invited: 1, confirmed: 1, maybe: 0, side: "חתן", group: "הורים" }
+  ];
+
+  const tbody = document.getElementById("tableBody");
+
+  let totalInvited = 0;
+  let totalConfirmed = 0;
+  let totalMaybe = 0;
+
+  data.forEach(row => {
+    totalInvited += row.invited || 0;
+    totalConfirmed += row.confirmed || 0;
+    totalMaybe += row.maybe || 0;
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${row.name}</td>
+      <td>${row.invited}</td>
+      <td><span class="badge confirmed">${row.confirmed || 0}</span></td>
+      <td><span class="badge maybe">${row.maybe || 0}</span></td>
+      <td>${row.side}</td>
+      <td><span class="badge group">${row.group}</span></td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("totalInvited").innerText = totalInvited;
+  document.getElementById("totalConfirmed").innerText = totalConfirmed;
+  document.getElementById("totalMaybe").innerText = totalMaybe;
+</script>
+
+</body>
+</html>
